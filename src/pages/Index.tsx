@@ -1,4 +1,3 @@
-
 const Index = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
@@ -17,16 +16,22 @@ const Index = () => {
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     fontFamily: {
                         'inter': ['Inter', 'sans-serif'],
+                        'mono': ['Fira Code', 'monospace'],
                     },
                     colors: {
                         'navy': '#1E293B',
                         'orange': '#F97316',
+                        'hacker-bg': '#0a0a0a',
+                        'hacker-card': '#1a1a1a',
+                        'hacker-green': '#00ff41',
+                        'hacker-green-dark': '#00cc33',
                     }
                 }
             }
@@ -56,26 +61,51 @@ const Index = () => {
             0%, 50% { opacity: 1; }
             51%, 100% { opacity: 0; }
         }
+        .hacker-glow {
+            text-shadow: 0 0 10px #00ff41, 0 0 20px #00ff41, 0 0 30px #00ff41;
+        }
+        .hacker-border {
+            border: 1px solid #00ff41;
+            box-shadow: 0 0 10px rgba(0, 255, 65, 0.3);
+        }
+        .matrix-bg {
+            background-image: 
+                linear-gradient(90deg, rgba(0, 255, 65, 0.03) 1px, transparent 1px),
+                linear-gradient(rgba(0, 255, 65, 0.03) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
     </style>
 </head>
-<body class="bg-gradient-to-br from-slate-50 to-slate-100 min-h-screen">
+<body class="bg-gradient-to-br from-slate-50 to-slate-100 min-h-screen transition-all duration-300" id="app-body">
     <div id="phishing-app" class="max-w-4xl mx-auto p-6">
+        <!-- Theme Switcher -->
+        <div class="flex justify-end mb-4">
+            <div class="bg-white rounded-lg shadow-md border border-slate-200 p-2" id="theme-switcher">
+                <label class="text-sm font-medium text-slate-700 mr-3">Theme:</label>
+                <select id="themeSelect" class="bg-transparent border-none text-sm font-medium text-slate-700 focus:outline-none cursor-pointer">
+                    <option value="light">Light</option>
+                    <option value="dark">Dark</option>
+                    <option value="hacker">Hacker</option>
+                </select>
+            </div>
+        </div>
+
         <!-- Header Section -->
-        <div class="text-center mb-8">
-            <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-navy to-slate-700 rounded-full mb-4 shadow-lg">
+        <div class="text-center mb-8" id="header-section">
+            <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-navy to-slate-700 rounded-full mb-4 shadow-lg" id="header-icon">
                 <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
                 </svg>
             </div>
-            <h1 class="text-4xl font-bold text-navy mb-2">Worried That Email Might Be a Scam?</h1>
-            <p class="text-xl text-slate-600 mb-6">Paste it below. We'll help you find out.</p>
+            <h1 class="text-4xl font-bold text-navy mb-2" id="main-title">Worried That Email Might Be a Scam?</h1>
+            <p class="text-xl text-slate-600 mb-6" id="main-subtitle">Paste it below. We'll help you find out.</p>
         </div>
 
         <!-- Main Card -->
-        <div class="bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden">
+        <div class="bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden" id="main-card">
             <!-- Input Section -->
-            <div class="p-8">
-                <label for="emailContent" class="block text-sm font-medium text-slate-700 mb-3">
+            <div class="p-8" id="input-section">
+                <label for="emailContent" class="block text-sm font-medium text-slate-700 mb-3" id="email-label">
                     Email Content to Analyze
                 </label>
                 <textarea 
@@ -110,14 +140,14 @@ const Index = () => {
         </div>
 
         <!-- Learn More Section -->
-        <div class="mt-8 bg-white rounded-2xl shadow-lg border border-slate-200">
+        <div class="mt-8 bg-white rounded-2xl shadow-lg border border-slate-200" id="learn-more-card">
             <button 
                 id="learnMoreToggle" 
                 class="w-full px-8 py-6 text-left flex items-center justify-between hover:bg-slate-50 transition-colors duration-200 rounded-2xl"
             >
                 <div>
-                    <h3 class="text-lg font-semibold text-navy">Learn More About Phishing Detection</h3>
-                    <p class="text-slate-600 mt-1">Discover how to spot phishing emails and protect yourself</p>
+                    <h3 class="text-lg font-semibold text-navy" id="learn-more-title">Learn More About Phishing Detection</h3>
+                    <p class="text-slate-600 mt-1" id="learn-more-desc">Discover how to spot phishing emails and protect yourself</p>
                 </div>
                 <svg id="learnMoreIcon" class="w-6 h-6 text-slate-400 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
@@ -169,13 +199,108 @@ const Index = () => {
         </div>
 
         <!-- Footer -->
-        <div class="text-center mt-8 text-slate-500 text-sm">
+        <div class="text-center mt-8 text-slate-500 text-sm" id="footer">
             <p>Copy written by <span class="font-medium text-slate-700">Yuster Peter</span></p>
             <p class="mt-1">Built with security and privacy in mind</p>
         </div>
     </div>
 
     <script>
+        class ThemeManager {
+            constructor() {
+                this.currentTheme = 'light';
+                this.initializeTheme();
+            }
+
+            initializeTheme() {
+                const themeSelect = document.getElementById('themeSelect');
+                themeSelect.addEventListener('change', (e) => {
+                    this.setTheme(e.target.value);
+                });
+            }
+
+            setTheme(theme) {
+                this.currentTheme = theme;
+                const body = document.getElementById('app-body');
+                const app = document.getElementById('phishing-app');
+                
+                // Reset all theme classes
+                body.className = 'min-h-screen transition-all duration-300';
+                
+                switch(theme) {
+                    case 'light':
+                        this.applyLightTheme();
+                        break;
+                    case 'dark':
+                        this.applyDarkTheme();
+                        break;
+                    case 'hacker':
+                        this.applyHackerTheme();
+                        break;
+                }
+            }
+
+            applyLightTheme() {
+                const body = document.getElementById('app-body');
+                body.className += ' bg-gradient-to-br from-slate-50 to-slate-100';
+                
+                // Reset all elements to light theme
+                document.getElementById('theme-switcher').className = 'bg-white rounded-lg shadow-md border border-slate-200 p-2';
+                document.getElementById('main-title').className = 'text-4xl font-bold text-navy mb-2';
+                document.getElementById('main-subtitle').className = 'text-xl text-slate-600 mb-6';
+                document.getElementById('main-card').className = 'bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden';
+                document.getElementById('learn-more-card').className = 'mt-8 bg-white rounded-2xl shadow-lg border border-slate-200';
+                document.getElementById('emailContent').className = 'w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-orange focus:border-transparent resize-none transition-all duration-200 text-slate-700';
+                document.getElementById('clearBtn').className = 'sm:w-auto px-6 py-4 border border-slate-300 text-slate-700 rounded-xl hover:bg-slate-50 transition-colors duration-200';
+                document.getElementById('email-label').className = 'block text-sm font-medium text-slate-700 mb-3';
+                document.getElementById('learn-more-title').className = 'text-lg font-semibold text-navy';
+                document.getElementById('learn-more-desc').className = 'text-slate-600 mt-1';
+                
+                document.body.style.fontFamily = 'Inter, sans-serif';
+            }
+
+            applyDarkTheme() {
+                const body = document.getElementById('app-body');
+                body.className += ' bg-gradient-to-br from-slate-900 to-slate-800';
+                
+                document.getElementById('theme-switcher').className = 'bg-slate-800 rounded-lg shadow-md border border-slate-700 p-2';
+                document.getElementById('main-title').className = 'text-4xl font-bold text-white mb-2';
+                document.getElementById('main-subtitle').className = 'text-xl text-slate-300 mb-6';
+                document.getElementById('main-card').className = 'bg-slate-800 rounded-2xl shadow-2xl border border-slate-700 overflow-hidden';
+                document.getElementById('learn-more-card').className = 'mt-8 bg-slate-800 rounded-2xl shadow-lg border border-slate-700';
+                document.getElementById('emailContent').className = 'w-full px-4 py-3 border border-slate-600 rounded-xl focus:ring-2 focus:ring-orange focus:border-transparent resize-none transition-all duration-200 text-white bg-slate-700';
+                document.getElementById('clearBtn').className = 'sm:w-auto px-6 py-4 border border-slate-600 text-slate-300 rounded-xl hover:bg-slate-700 transition-colors duration-200';
+                document.getElementById('email-label').className = 'block text-sm font-medium text-slate-300 mb-3';
+                document.getElementById('learn-more-title').className = 'text-lg font-semibold text-white';
+                document.getElementById('learn-more-desc').className = 'text-slate-300 mt-1';
+                
+                document.body.style.fontFamily = 'Inter, sans-serif';
+            }
+
+            applyHackerTheme() {
+                const body = document.getElementById('app-body');
+                body.className += ' bg-hacker-bg matrix-bg';
+                
+                document.getElementById('theme-switcher').className = 'bg-hacker-card rounded-lg shadow-md hacker-border p-2';
+                document.getElementById('main-title').className = 'text-4xl font-bold text-hacker-green mb-2 hacker-glow font-mono';
+                document.getElementById('main-subtitle').className = 'text-xl text-green-400 mb-6 font-mono';
+                document.getElementById('main-card').className = 'bg-hacker-card rounded-2xl shadow-2xl hacker-border overflow-hidden';
+                document.getElementById('learn-more-card').className = 'mt-8 bg-hacker-card rounded-2xl shadow-lg hacker-border';
+                document.getElementById('emailContent').className = 'w-full px-4 py-3 hacker-border rounded-xl focus:ring-2 focus:ring-hacker-green focus:border-transparent resize-none transition-all duration-200 text-hacker-green bg-black font-mono';
+                document.getElementById('clearBtn').className = 'sm:w-auto px-6 py-4 hacker-border text-hacker-green rounded-xl hover:bg-hacker-card transition-colors duration-200 font-mono';
+                document.getElementById('email-label').className = 'block text-sm font-medium text-hacker-green mb-3 font-mono';
+                document.getElementById('learn-more-title').className = 'text-lg font-semibold text-hacker-green font-mono';
+                document.getElementById('learn-more-desc').className = 'text-green-400 mt-1 font-mono';
+                document.getElementById('scanBtn').className = 'flex-1 bg-gradient-to-r from-hacker-green to-hacker-green-dark hover:from-hacker-green-dark hover:to-hacker-green text-black font-semibold py-4 px-8 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl font-mono';
+                
+                document.body.style.fontFamily = 'Fira Code, monospace';
+                
+                // Update header icon for hacker theme
+                document.getElementById('header-icon').className = 'inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-hacker-green to-hacker-green-dark rounded-full mb-4 shadow-lg';
+                document.getElementById('header-icon').querySelector('svg').className = 'w-8 h-8 text-black';
+            }
+        }
+
         class PhishingDetector {
             constructor() {
                 this.suspiciousPatterns = [
@@ -305,7 +430,7 @@ const Index = () => {
             }
 
             getPatternWeight(index) {
-                const weights = [25, 20, 25, 10, 15, 20, 15, 15]; // Corresponding to suspiciousPatterns array
+                const weights = [25, 20, 25, 10, 15, 20, 15, 15];
                 return weights[index] || 10;
             }
 
@@ -458,7 +583,8 @@ const Index = () => {
 
         // Initialize the app when DOM is loaded
         document.addEventListener('DOMContentLoaded', () => {
-            new PhishingDetector();
+            const themeManager = new ThemeManager();
+            const phishingDetector = new PhishingDetector();
         });
     </script>
 </body>
