@@ -10,6 +10,7 @@ import { Eye, EyeOff } from 'lucide-react';
 
 export const AuthForm: React.FC = () => {
   const [isLogin, setIsLogin] = useState(true);
+  const [isForgotPassword, setIsForgotPassword] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -126,7 +127,23 @@ export const AuthForm: React.FC = () => {
     setLoading(true);
 
     try {
-      if (isLogin) {
+      if (isForgotPassword) {
+        const redirectUrl = `${window.location.origin}/auth`;
+        
+        const { error } = await supabase.auth.resetPasswordForEmail(email, {
+          redirectTo: redirectUrl
+        });
+        
+        if (error) throw error;
+        
+        toast({
+          title: "Password reset email sent!",
+          description: "Please check your email for password reset instructions.",
+        });
+        
+        setIsForgotPassword(false);
+        setIsLogin(true);
+      } else if (isLogin) {
         const { error } = await supabase.auth.signInWithPassword({
           email,
           password,
@@ -179,10 +196,28 @@ export const AuthForm: React.FC = () => {
     }
   };
 
+  const handleBackToLogin = () => {
+    setIsForgotPassword(false);
+    setIsLogin(true);
+    setEmail('');
+    setPassword('');
+  };
+
+  const getTitle = () => {
+    if (isForgotPassword) return 'Reset Password';
+    return isLogin ? 'Sign In' : 'Sign Up';
+  };
+
+  const getSubmitButtonText = () => {
+    if (loading) return 'Loading...';
+    if (isForgotPassword) return 'Send Reset Email';
+    return isLogin ? 'Sign In' : 'Sign Up';
+  };
+
   return (
     <div className={getFormClasses()}>
       <h2 className={getTitleClasses()}>
-        {isLogin ? 'Sign In' : 'Sign Up'}
+        {getTitle()}
       </h2>
       
       <form onSubmit={handleAuth} className="space-y-6">
@@ -202,57 +237,83 @@ export const AuthForm: React.FC = () => {
           />
         </div>
         
-        <div>
-          <Label htmlFor="password" className={getLabelClasses()}>
-            Password
-          </Label>
-          <div className="relative">
-            <Input
-              id="password"
-              type={showPassword ? 'text' : 'password'}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              disabled={loading}
-              className={getInputClasses()}
-              placeholder="Enter your password"
-            />
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className={`absolute right-3 top-1/2 transform -translate-y-1/2 ${getPasswordToggleClasses()}`}
-              disabled={loading}
-            >
-              {showPassword ? (
-                <EyeOff className="h-4 w-4" />
-              ) : (
-                <Eye className="h-4 w-4" />
-              )}
-            </button>
+        {!isForgotPassword && (
+          <div>
+            <Label htmlFor="password" className={getLabelClasses()}>
+              Password
+            </Label>
+            <div className="relative">
+              <Input
+                id="password"
+                type={showPassword ? 'text' : 'password'}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                disabled={loading}
+                className={getInputClasses()}
+                placeholder="Enter your password"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className={`absolute right-3 top-1/2 transform -translate-y-1/2 ${getPasswordToggleClasses()}`}
+                disabled={loading}
+              >
+                {showPassword ? (
+                  <EyeOff className="h-4 w-4" />
+                ) : (
+                  <Eye className="h-4 w-4" />
+                )}
+              </button>
+            </div>
           </div>
-        </div>
+        )}
         
         <Button
           type="submit"
           disabled={loading}
           className={getButtonClasses()}
         >
-          {loading ? 'Loading...' : (isLogin ? 'Sign In' : 'Sign Up')}
+          {getSubmitButtonText()}
         </Button>
       </form>
       
-      <div className="mt-6 text-center">
-        <p className="text-sm">
-          <span className={getDescriptionTextClasses()}>
-            {isLogin ? "Don't have an account? " : "Already have an account? "}
-          </span>
-          <span
-            onClick={() => setIsLogin(!isLogin)}
-            className={getToggleClasses()}
-          >
-            {isLogin ? 'Sign Up' : 'Sign In'}
-          </span>
-        </p>
+      <div className="mt-6 text-center space-y-2">
+        {!isForgotPassword ? (
+          <>
+            <p className="text-sm">
+              <span className={getDescriptionTextClasses()}>
+                {isLogin ? "Don't have an account? " : "Already have an account? "}
+              </span>
+              <span
+                onClick={() => setIsLogin(!isLogin)}
+                className={getToggleClasses()}
+              >
+                {isLogin ? 'Sign Up' : 'Sign In'}
+              </span>
+            </p>
+            
+            {isLogin && (
+              <p className="text-sm">
+                <span
+                  onClick={() => setIsForgotPassword(true)}
+                  className={getToggleClasses()}
+                >
+                  Forgot your password?
+                </span>
+              </p>
+            )}
+          </>
+        ) : (
+          <p className="text-sm">
+            <span
+              onClick={handleBackToLogin}
+              className={getToggleClasses()}
+            >
+              Back to Sign In
+            </span>
+          </p>
+        )}
       </div>
     </div>
   );
